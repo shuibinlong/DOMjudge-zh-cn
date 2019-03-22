@@ -66,7 +66,7 @@ function printresult($result, $valid = true)
             $style = 'sol_incorrect';
     }
 
-    return $start . ($valid ? $style : 'disabled') . '">' . $result . $end;
+    return $start . ($valid ? $style : 'disabled') . '"' . (IS_JURY ? 'style="font-weight: bold;"' : "") . '>' . $result . $end;
 }
 
 /**
