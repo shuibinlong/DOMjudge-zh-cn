@@ -251,14 +251,14 @@ function putSubmissions($cdatas, $restrictions, $limit = 0, $highlight = null, $
             "<a$link>" . specialchars($row['langid']) . '</a></td>';
         echo "<td class=\"result\"><a$link>";
         if (difftime($row['submittime'], $cdatas[$row['cid']]['endtime']) >= 0) {
-            echo printresult('too-late');
+            echo printresult('Too Late');
             if (IS_JURY && $row['result']) {
                 echo " (" . printresult($row['result']) . ")";
             }
         } elseif (! $row['result'] ||
                   (!IS_JURY && ! $row['verified'] &&
                    dbconfig_get('verification_required', 0))) {
-            echo printresult($row['judgehost'] || !IS_JURY ? '' : 'queued');
+            echo printresult($row['judgehost'] || !IS_JURY ? '' : 'Queued');
         } else {
             echo printresult($row['result']);
         }
@@ -525,7 +525,7 @@ function putClock()
                 $left = "比赛延迟";
             }
         } else {
-            $left = "比赛结束";
+            $left = " 比赛结束";
         }
     }
 
