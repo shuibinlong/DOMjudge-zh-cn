@@ -8,7 +8,7 @@ img {	border: 0; }
 
 .sol {
 	font-weight: bold;
-	font-variant: small-caps;
+	/* font-variant: small-caps; */
 }
 
 .sol_correct      { color: green;  }
