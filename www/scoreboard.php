@@ -777,7 +777,7 @@ function putScoreBoard($cdata, $myteamid = null, $static = false, $filter = fals
     }
     echo '<div class="card">';
     // page heading with contestname and start/endtimes
-    echo '<div class="card-header" style="font-family: Roboto, sans-serif; display: flex;">';
+    echo '<div class="card-header" style="display: flex;">';
     echo '<span style="font-weight: bold;">' . specialchars($cdata['name']) . '</span>'
         . ' <span style="color: DimGray; margin-left: auto;">' . $moreinfo . '</span>';
     echo '</div>';
