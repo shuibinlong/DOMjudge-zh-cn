@@ -303,7 +303,8 @@ function renderScoreBoardTable(
     $limitteams = null,
     $displayrank = true,
     $center = true,
-    $showlegends = true
+    $showlegends = true,
+    $personal = false
 ) {
     // 'unpack' the scoreboard data:
     $scores  = $sdata['scores'];
@@ -380,7 +381,8 @@ function renderScoreBoardTable(
             echo '</th>';
         }
     }
-    echo "</tr>\n</thead>\n\n<tbody>\n";
+    echo "</tr>\n</thead>\n\n<tbody ";
+    echo 'style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">';
 
     // print the main scoreboard rows
     $prevsortorder = -1;
@@ -396,6 +398,9 @@ function renderScoreBoardTable(
             $usedCategories[$categoryId] = true;
         }
     }
+    $gold = 6;
+    $silver = 15;
+    $bronze = 25;
     foreach ($scores as $team => $totals) {
         // skip if we have limitteams and the team is not listed
         if (!empty($limitteams) && !in_array($team, $limitteams)) {
@@ -421,6 +426,15 @@ function renderScoreBoardTable(
             $prevsortorder = $totals['sortorder'];
             $prevteam = null;
         }
+        // GetPrize
+        $team_name = specialchars($teams[$team]['name']);
+        $prize = false;
+        if ($gold > 0 || $silver > 0 || $bronze > 0) {
+            $prize = true;
+        }
+        if (substr($team_name, 0, 1) == '*' || $personal == true) {
+            $prize = false;
+        } 
         // check whether this is us, otherwise use category colour
         if (@$myteamid == $team) {
             $classes[] = "scorethisisme";
@@ -432,7 +446,23 @@ function renderScoreBoardTable(
             echo ' class="' . implode(' ', $classes) . '"';
         }
         echo ' id="team:' . $teams[$team]['teamid'] . '"';
-        echo '><td class="scorepl">';
+        echo '>';
+        echo '<td class="scorepl"';
+        if ($prize == true) {
+            echo ' style="background: ';
+            if ($gold > 0) {
+                echo '#ffd700';
+                $gold--;
+            } else if ($silver > 0) {
+                echo '#c0c0c0';
+                $silver--;
+            } else if ($bronze > 0) {
+                echo '#cd853f';
+                $bronze--;
+            }
+            echo ';"';
+        }
+        echo '>';
         // Only print rank when score is different from the previous team
         if (! $displayrank) {
             echo jurylink(null, '?');
@@ -1072,7 +1102,8 @@ function putTeamRow($cdata, $teamids)
         $teamids,
         $displayrank,
         true,
-        false
+        false,
+        true
     );
     if (! IS_JURY) {
         echo "</div>\n\n";
