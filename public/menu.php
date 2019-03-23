@@ -21,6 +21,11 @@ $started = checkrole('jury') || $fdata['started'];
             <a class="nav-link disabled"><span class="octicon octicon-book"></span> 题目列表</a>
 <?php endif; ?>
           </li>
+<?php if (!logged_in()): ?>
+		<li class="nav-item">
+			<a class="nav-link" href="register.php"><span class="octicon octicon-organization"></span> 报名参赛</a>
+        </li>
+<?php endif; ?>
 <?php if (checkrole('team')): ?>
           <li class="nav-item">
             <a class="nav-link" href="../team/"><span class="octicon octicon-arrow-right"></span> 比赛中心</a>
