@@ -15,7 +15,7 @@ echo "<h1>提交代码</h1>\n\n";
 
 $fdata = calcFreezeData($cdata);
 if (! $fdata['started'] && ! checkrole('jury')) {
-    echo '<div class="container submitform"><div class="alert alert-danger" role="alert">Contest has not yet started - cannot submit.</div></div>';
+    echo '<div class="container submitform"><div class="alert alert-danger" role="alert">比赛尚未开始，无法提交！</div></div>';
     require(LIBWWWDIR . '/footer.php');
     exit;
 }
