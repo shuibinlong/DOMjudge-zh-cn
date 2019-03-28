@@ -198,8 +198,8 @@ function getTeams($filter, $jury, $cdata)
 
     return $DB->q('KEYTABLE SELECT team.teamid AS ARRAYKEY, team.teamid, team.externalid,
                    team.name, team.categoryid, team.affilid, penalty, sortorder,
-                   country, color, team_affiliation.name AS affilname,
-               team_affiliation.externalid AS affilid_external
+                   country, room, members, color, team_affiliation.name AS affilname,
+                team_affiliation.externalid AS affilid_external
                    FROM team
                    INNER JOIN contest ON (contest.cid = %i)
                    LEFT JOIN contestteam ct USING (teamid, cid)
@@ -329,6 +329,37 @@ function renderScoreBoardTable(
             break;
         }
     }
+
+    // model settings
+    echo '<div class="modal fade" id="TeamFace">' . 
+        '<div class="modal-dialog">' . 
+        '<div class="modal-content">' . 
+        '<div class="modal-header">' . 
+        '<h4 class="modal-title">队伍信息</h4>' . 
+        '<button type="button" class="close" data-dismiss="modal">&times;</button>' . 
+        '</div>' . 
+        '<div class="modal-body">' . 
+        '<div class="row"><div class="col-sm-8"><table class="table table-sm table-striped"><tbody>' . 
+        '<tr><th style="width:35%; text-align:center;"><strong>队伍名称</strong></th><td style="text-align:center;" id="TeamName">*唐回峰</td></tr>' . 
+        '<tr><th style="width:35%; text-align:center;"><strong>队伍属性</strong></th><td style="text-align:center;" id="TeamCategory">2015级</td></tr>' . 
+        '<tr><th style="width:35%; text-align:center;"><strong>学院/书院</strong></th><td style="text-align:center;" id="TeamAffiliation">计算机学院</td></tr>' . 
+        '<tr><th style="width:35%; text-align:center;"><strong>队伍成员</strong></th><td style="text-align:center;" id="TeamMembers">2015级</td></tr>' . 
+        '<tr><th style="width:35%; text-align:center;"><strong>队伍位置</strong></th><td style="text-align:center;" id="TeamLocation">计算机学院</td></tr>' . 
+        '</tbody></table></div></div></div>' . 
+        '<div class="modal-footer">' . 
+        '<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>' . 
+        '</div></div></div></div>';
+
+    echo "<script language=javascript>" . 
+        "function ShowDialog(name, Category, Affiliation, Members, Location){" . 
+            '$("#TeamName").html(name);' . 
+            '$("#TeamCategory").html(Category);' . 
+            '$("#TeamAffiliation").html(Affiliation);' . 
+            '$("#TeamMembers").html(Members);' . 
+            '$("#TeamLocation").html(Location);' . 
+            '$("#TeamFace").modal("show");' . 
+        "}</script>";
+
     echo '<table class="scoreboard' . (IS_JURY ? ' scoreboard_jury' : '') . ($center ? ' center' : '') . "\">\n";
 
     // output table column groups (for the styles)
@@ -533,7 +564,7 @@ function renderScoreBoardTable(
             '<td class="scoretn"' .
             (!empty($color) ? ' style="background: ' . $color . ';"' : '') .
             (IS_JURY ? ' title="' . specialchars($team) . '"' : '') . '>' .
-            ($static ? '' : '<a href="team.php?id=' . urlencode($team) . '">') .
+            ($static ? '' : '<a onclick="ShowDialog(' . "'" . specialchars($teams[$team]['name']) . "','" . specialchars($categs[$categoryId]['name']) . "','" . $affilname . "','" . specialchars($teams[$team]['members']) . "','" . specialchars($teams[$team]['room']) . "'" . ')">') .
             $region_leader .
             specialchars($teams[$team]['name']) .
             ($SHOW_AFFILIATIONS ? '<br /><span class="univ">' . $affilname .
