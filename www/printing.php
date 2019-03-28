@@ -56,11 +56,11 @@ function put_print_form()
 <form action="<?=specialchars($pagename)?>" method="post" enctype="multipart/form-data">
 
   <div class="form-group">
-    <label for="maincode">打印源文件：</label>
+    <label for="maincode">源文件:</label>
     <input type="file" class="form-control-file" name="code" id="code" required onchange='detectLanguage(document.getElementById("code").value);' />
   </div>
   <div class="form-group">
-    <label for="langid">语言：</label>
+    <label for="langid">语言:</label>
     <select class="custom-select" name="langid" id="langid">
 
 
@@ -105,7 +105,7 @@ function handle_print_upload()
     echo "<div>" . nl2br(specialchars($ret[1])) . "</div>\n\n";
 
     if ($ret[0]) {
-        echo "<div class=\"alert alert-success\">打印成功！</div>";
+        echo "<div class=\"alert alert-success\"><strong>提交成功！</strong>代码将尽快打印并送达。</div>";
     } else {
         error("Error while printing. Contact staff.");
     }
