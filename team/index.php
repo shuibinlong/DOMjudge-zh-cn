@@ -110,6 +110,26 @@ HTML;
 */
 
 ?>
+
+<div class="modal fade" id="ClarificationForm"> 
+   <div class="modal-dialog"> 
+    <div class="modal-content"> 
+     <div class="modal-header"> 
+      <h2 class="modal-title">请完善您的提问内容</h2> 
+      <button type="button" class="close" data-dismiss="modal">&times;</button> 
+     </div>
+     <div class="modal-body"> 
+        <?php putClarificationForm("clarification.php"); ?>
+     </div> 
+     <div class="modal-footer"> 
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+      <button type="submit" value="Send" name="submit" class="btn btn-primary"><span class="octicon octicon-cloud-upload"></span> 提交</button>
+     </div>
+     </form>
+    </div>
+   </div>
+</div>
+
 <div class="row">
 <div class="col">
 <h3 class="teamoverview">提交记录</h3>
@@ -163,7 +183,7 @@ if ($requests->count() == 0) {
 }
 
 ?>
-<div class="m-1"><a href="clarification.php" class="btn btn-secondary btn-sm">我要提问</a></div>
+<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ClarificationForm">我要提问</button>
 
 </div>
 
