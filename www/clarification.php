@@ -583,9 +583,11 @@ if (IS_JURY && $respid!==null) {
         }
     } ?>
 
+<?php if (IS_JURY): ?>
 <div class="form-group">
 <button type="submit" value="Send" name="submit" class="btn btn-primary"><span class="octicon octicon-cloud-upload"></span> 提交</button>
 </div>
+<?php endif; ?>
 </form>
 </div>
 
