@@ -35,7 +35,6 @@ if ($fdata['started'] || checkrole('jury')) {
     }
     echo "\t\tdefault: return '';\n\t}\n}\n\n";
 }
-
 echo "initReload(" . $refreshtime . ");\n";
 echo "// -->\n</script>\n";
 
@@ -122,13 +121,20 @@ HTML;
         <?php putClarificationForm("clarification.php"); ?>
      </div> 
      <div class="modal-footer"> 
-      <button type="submit" value="Send" name="submit" class="btn btn-primary"><span class="octicon octicon-cloud-upload"></span> 提交</button>
+      <button type="submit" value="Send" name="submit" class="btn btn-primary" id="SendButton"><span class="octicon octicon-cloud-upload"></span> 提交</button>
       <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
      </div>
      </form>
     </div>
    </div>
 </div>
+
+<?php if (!$fdata['started'] && !checkrole('jury')): ?>
+<script>
+    $('#SendButton').prop('disabled', true);
+</script>
+<?php endif; ?>
+
 
 <div class="row">
 <div class="col">
