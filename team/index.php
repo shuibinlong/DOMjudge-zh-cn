@@ -122,8 +122,8 @@ HTML;
         <?php putClarificationForm("clarification.php"); ?>
      </div> 
      <div class="modal-footer"> 
-      <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
       <button type="submit" value="Send" name="submit" class="btn btn-primary"><span class="octicon octicon-cloud-upload"></span> 提交</button>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
      </div>
      </form>
     </div>
