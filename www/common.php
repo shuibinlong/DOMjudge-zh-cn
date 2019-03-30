@@ -316,20 +316,20 @@ function putSubmissions($cdatas, $restrictions, $limit = 0, $highlight = null, $
                 $testcase_results = "";
                 $is_final = !empty($row['result']);
                 foreach ($runinfo as $key => $run) {
-                    $class = ($is_final ? "tc_unused" : "tc_pending");
+                    $class = ($is_final ? "badge-secondary" : "badge badge-primary");
                     $text = "?";
                     switch ($run['runresult']) {
                         case 'correct':
-                            $class = "tc_correct";
+                            $class = "badge-success";
                             $text = "✓";
                             break;
                         case null:
                             break;
                         default:
                             $text = substr($run['runresult'], 0, 1);
-                            $class = "tc_incorrect";
+                            $class = "badge-danger";
                     }
-                    $testcase_results .= "<span class=\"$class tc_box_small\">" . $text . "</span>";
+                    $testcase_results .= "<span class=\"badge $class\" style=\"margin-right:1px;\">" . $text . "</span>";
                 }
                 echo "<td class=\"tc_list_small\">" . $testcase_results . "</td>";
             }
@@ -409,6 +409,7 @@ function putTeam($teamid)
     $countryflag = "images/countries/" . urlencode($team['country']) . ".png";
     $teamimage = "images/teams/" . urlencode($team['teamid']) . ".jpg";
 
+    echo '<div class="container submitform">';
     echo "<h1>Team ".specialchars($team['name'])."</h1>\n\n";
 
     if (is_readable(WEBAPPDIR.'/web/'.$teamimage)) {
@@ -417,22 +418,22 @@ function putTeam($teamid)
             specialchars($team['name']) . '" />';
     } ?>
 
-<table class="p-2">
-<tr><td class="p-2">Name:    </td><td class="p-2"><?php echo specialchars($team['name'])?></td></tr>
-<tr><td class="p-2">Category:</td><td class="p-2"><?php echo specialchars($team['catname'])?></td></tr>
+<table class="table table-sm table-striped"><tbody>
+<tr><th>Name:</th><td><?php echo specialchars($team['name'])?></td></tr>
+<tr><th>Category:</th><td><?php echo specialchars($team['catname'])?></td></tr>
 <?php
 
     if (!empty($team['members'])) {
-        echo '<tr><td class="p-2">Members:</td><td class="p-2">' .
+        echo '<tr><th>Members:</th><td>' .
             nl2br(specialchars($team['members'])) . "</td></tr>\n";
     }
 
     if ($SHOW_AFFILIATIONS && !empty($team['affilid'])) {
-        echo '<tr><td class="p-2">Affiliation:</td><td class="p-2">';
+        echo '<tr><th>Affiliation:</th><td>';
         echo specialchars($team['affname']);
         echo "</td></tr>\n";
         if ($SHOW_FLAGS && !empty($team['country'])) {
-            echo '<tr><td class="p-2">Country:</td><td class="p-2">';
+            echo '<tr><th>Country:</th><td>';
             if (is_readable(WEBAPPDIR.'/web/'.$countryflag)) {
                 echo '<img src="../' . $countryflag . '" alt="' .
                     specialchars($team['country']) . '" /> ';
@@ -442,11 +443,11 @@ function putTeam($teamid)
     }
 
     if (!empty($team['room'])) {
-        echo '<tr><td class="p-2">Location:</td><td class="p-2">' .
+        echo '<tr><th>Location:</th><td>' .
             specialchars($team['room']) . "</td></tr>\n";
     }
 
-    echo "</table>\n\n";
+    echo "</tbody></table></div>\n\n";
 }
 
 /**
@@ -479,34 +480,57 @@ function putClock()
 {
     global $cdata, $username, $userdata, $cid, $cdatas;
 
-    echo '<div class="navbar-text">';
     // Show a contest selection form, if there are contests
     if (IS_JURY || count($cdatas) > 1) {
-        echo "<div id=\"selectcontest\">\n";
-        echo addForm('change_contest.php', 'get', 'selectcontestform');
-        $contests = array_map(function ($c) {
-            return $c['shortname'];
-        }, $cdatas);
         if (IS_JURY) {
-            $values = array(
-                // -1 because setting cookies to null/'' unsets then and that is not what we want
-                -1 => '- No contest'
-            );
+            echo "<li class=\"nav-item dropdown\"><a class=\"nav-link\" id=\"selectcontest\">\n";
+            echo addForm('change_contest.php', 'get', 'selectcontestform');
+            $contests = array_map(function ($c) {
+                return $c['shortname'];
+            }, $cdatas);
+            if (IS_JURY) {
+                $values = array(
+                    // -1 because setting cookies to null/'' unsets then and that is not what we want
+                    -1 => '- No contest'
+                );
+            }
+            foreach ($contests as $contestid => $name) {
+                $values[$contestid] = $name;
+            }
+            echo addSelect('cid', $values, $cid, true);
+            echo addEndForm();
+            echo "<script type=\"text/javascript\">
+                    document.getElementById('cid').addEventListener('change', function() {
+                        document.getElementById('selectcontestform').submit();
+                    });
+                </script>";
+            echo "</a></li></ul>\n";
+        } else {
+            echo "<a class=\"nav-link\" id=\"selectcontest\">\n";
+            echo addForm('change_contest.php', 'get', 'selectcontestform');
+            $contests = array_map(function ($c) {
+                return $c['shortname'];
+            }, $cdatas);
+            if (IS_JURY) {
+                $values = array(
+                    // -1 because setting cookies to null/'' unsets then and that is not what we want
+                    -1 => '- No contest'
+                );
+            }
+            foreach ($contests as $contestid => $name) {
+                $values[$contestid] = $name;
+            }
+            echo addSelect('cid', $values, $cid, true);
+            echo addEndForm();
+            echo "<script type=\"text/javascript\">
+                    document.getElementById('cid').addEventListener('change', function() {
+                        document.getElementById('selectcontestform').submit();
+                    });
+                </script>";
+            echo "</a>\n";
         }
-        foreach ($contests as $contestid => $name) {
-            $values[$contestid] = $name;
-        }
-        echo 'contest: ' . addSelect('cid', $values, $cid, true);
-        echo addEndForm();
-        echo "<script type=\"text/javascript\">
-              document.getElementById('cid').addEventListener('change', function() {
-              document.getElementById('selectcontestform').submit();
-    });
-</script>
-";
-        echo "</div>\n";
     }
-    echo '</div><div class="navbar-text">';
+    echo '<div class="navbar-text" style="white-space:nowrap;">';
 
 
     if (is_null($cdata)) {
@@ -529,21 +553,7 @@ function putClock()
         }
     }
 
-    echo "<span style=\"padding-left: 10px;\" class=\"octicon octicon-clock\"></span> <span id=\"timeleft\">$left</span>\n";
-
-    if (IS_JURY && logged_in()) {
-        // Show pretty name if possible
-        $displayname = $username;
-        if ($userdata['name']) {
-            $displayname = "<abbr title=\"$username\">" . $userdata['name'] . "</abbr>";
-        }
-        echo "<div id=\"username\">logged in as " . $displayname
-            . (have_logout() ? ' <a href="../auth/logout.php">' .
-                '<span class="octicon octicon-sign-out"></span></a>' : "")
-            . "</div>";
-    }
-
-    echo "</div>";
+    echo "<span style=\"padding-left: 10px;\" class=\"octicon octicon-clock\"></span> <span id=\"timeleft\">$left</span></div>\n";
 
     echo "<script type=\"text/javascript\">
     var initial = " . time() . ";
@@ -722,7 +732,7 @@ function putProblemTextList()
     $probs = getProblemTextList();
 
     if (empty($probs)) {
-        echo "<div class=\"alert alert-secondary\">No problem texts available at this point.</div>\n\n";
+        echo "<div class=\"alert alert-secondary\">比赛尚未开始，无法查看题目！</div>\n\n";
         return;
     }
 
