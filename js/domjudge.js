@@ -33,31 +33,36 @@ function updateMenu(doreload_clarifications, doreload_judgehosts, doreload_rejud
 
 			elem = document.getElementById('menu_clarifications');
 			newstr = '';
-			if ( elem!==null ) {
+			if ( elem!=='nav-link' ) {
 				if ( nclars === 0 ) {
-					elem.className = null;
+					elem.className = 'nav-link';
+					if ( elem.innerHTML !== '<span class="fas fa-comments"></span> clarifications') {
+						elem.innerHTML = '<span class="fas fa-comments"></span> clarifications';
+						if(doreload_clarifications) {
+							location.reload();
+						}
+					}
 				} else {
-					newstr = ' ('+nclars+' new)';
-					elem.className = 'new';
-				}
-				if ( elem.innerHTML !== '<span class="octicon octicon-comment-discussion"></span> clarifications' + newstr ) {
-					elem.innerHTML = '<span class="octicon octicon-comment-discussion"></span> clarifications' + newstr;
-					if(doreload_clarifications) {
-						location.reload();
+					elem.className = 'nav-link text-info';
+					if ( elem.innerHTML !== '<span class="fas fa-comments"></span> clarifications <span class="badge badge-info" id="num-alerts-clarifications">' + nclars + '</span>') {
+						elem.innerHTML = '<span class="fas fa-comments"></span> clarifications <span class="badge badge-info" id="num-alerts-clarifications">' + nclars + '</span>';
+						if(doreload_clarifications) {
+							location.reload();
+						}
 					}
 				}
 			}
 			elem = document.getElementById('menu_judgehosts');
 			newstr = '';
-			if ( elem!==null ) {
+			if ( elem!== 'nav-link' ) {
 				if ( nhosts === 0 ) {
-					elem.className = null;
+					elem.className =  'nav-link';
 				} else {
 					newstr = ' ('+nhosts+' down)';
-					elem.className = 'new';
+					elem.className = 'nav-link text-info';
 				}
-				if ( elem.innerHTML !== '<span class="octicon octicon-law"></span> judgehosts' + newstr ) {
-					elem.innerHTML = '<span class="octicon octicon-law"></span> judgehosts' + newstr;
+				if ( elem.innerHTML !== '<i class="octicon octicon-server"></i> judgehosts' + newstr ) {
+					elem.innerHTML = '<i class="octicon octicon-server"></i> judgehosts' + newstr;
 					if(doreload_judgehosts) {
 						location.reload();
 					}
@@ -65,17 +70,22 @@ function updateMenu(doreload_clarifications, doreload_judgehosts, doreload_rejud
 			}
 			elem = document.getElementById('menu_rejudgings');
 			newstr = '';
-			if ( elem!==null ) {
+			if ( elem!=='nav-link' ) {
 				if ( nrejuds === 0 ) {
-					elem.className = null;
+					elem.className = 'nav-link';
+					if ( elem.innerHTML !== '<span class="fas fa-sync"></span> rejudgings') {
+						elem.innerHTML = '<span class="fas fa-sync"></span> rejudgings';
+						if(doreload_judgehosts) {
+							location.reload();
+						}
+					}
 				} else {
-					newstr = ' ('+nrejuds+' active)';
-					elem.className = 'new';
-				}
-				if ( elem.innerHTML !== '<span class="octicon octicon-sync"></span> rejudgings' + newstr ) {
-					elem.innerHTML = '<span class="octicon octicon-sync"></span> rejudgings' + newstr;
-					if(doreload_judgehosts) {
-						location.reload();
+					elem.className = 'nav-link text-info';
+					if ( elem.innerHTML !== '<span class="fas fa-sync"></span> rejudgings <span class="badge badge-info" id="num-alerts-clarifications">' + nrejuds + '</span>') {
+						elem.innerHTML = '<span class="fas fa-sync"></span> rejudgings <span class="badge badge-info" id="num-alerts-clarifications">' + nrejuds + '</span>';
+						if(doreload_judgehosts) {
+							location.reload();
+						}
 					}
 				}
 			}
