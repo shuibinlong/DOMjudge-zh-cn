@@ -66,12 +66,13 @@ h6 { font-size: .75em; }
 .clarificationform {
   max-width: 800px;
 }
-#submitbut {
+/* #submitbut {
   margin-right: 2rem;
-}
+} */
 </style>
 <link rel="stylesheet" href="../style.css?v=<?=ASSET_TAG?>" type="text/css" />
 <link rel="stylesheet" href="../css/octicons/octicons.css?v=<?=ASSET_TAG?>" />
+<link rel="stylesheet" href="../fontawesome/css/all.css?v=<?=ASSET_TAG?>" />
 <script type="text/javascript" src="../js/jquery.min.js?v=<?=ASSET_TAG?>"></script>
 <script type="text/javascript" src="../js/bootstrap.min.js?v<?=ASSET_TAG?>"></script>
 <?php
@@ -131,9 +132,6 @@ function toggleRefresh() {
     } else {
         enableRefresh();
     }
-
-    var text = refreshEnabled ? 'Disable refresh' : 'Enable refresh';
-    $('#refresh-toggle').val(text);
 }
 
 <?php
@@ -142,6 +140,7 @@ if (IS_JURY) {
 $(function () {
     $('#refresh-toggle').on('click', function () {
         toggleRefresh();
+        this.innerHTML = refreshEnabled ? 'Disable Refresh' : 'Enable Refresh';
     });
 });
 
