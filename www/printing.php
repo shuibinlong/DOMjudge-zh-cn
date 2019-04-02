@@ -35,7 +35,7 @@ function put_print_form()
 
         // language ID
 
-        var elt=document.getElementById('langid');
+        var elt=document.getElementById('printlangid');
         // the 'autodetect' option has empty value
         if ( elt.value != '' ) return;
 
@@ -57,11 +57,15 @@ function put_print_form()
 
   <div class="form-group">
     <label for="maincode">源文件:</label>
-    <input type="file" class="form-control-file" name="code" id="code" required onchange='detectLanguage(document.getElementById("code").value);' />
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" name="code" id="code" required onchange='detectLanguage(document.getElementById("code").value);' />
+        <label for="code" class="custom-file-label">未选择任何文件</label>
+    </div>
+    <!-- <input type="file" class="form-control-file" name="code" id="code" required onchange='detectLanguage(document.getElementById("code").value);' /> -->
   </div>
   <div class="form-group">
-    <label for="langid">语言:</label>
-    <select class="custom-select" name="langid" id="langid">
+    <label for="printlangid">语言:</label>
+    <select class="custom-select" name="printlangid" id="printlangid">
 
 
 <?php
@@ -73,6 +77,16 @@ function put_print_form()
   <input type="submit" name="submit" value="提交打印" class="btn btn-primary" />
 </form>
 </div>
+
+<script>
+    $('#code').on('change', function() {
+      var filename = $(this).val();
+      if (filename !== '' && filename !== undefined) {
+        filename = filename.replace(/^.*[\\\/]/, '');
+        $(this).next('.custom-file-label').html(filename);
+      }
+    })
+</script>
 
 <?php
 }
@@ -89,7 +103,7 @@ function handle_print_upload()
     $realfilename = $_FILES['code']['tmp_name'];
 
     /* Determine the language */
-    $langid = @$_POST['langid'];
+    $langid = @$_POST['printlangid'];
     /* sanity check only */
     if ($langid != "") {
         $lang = $DB->q('MAYBETUPLE SELECT langid FROM language
