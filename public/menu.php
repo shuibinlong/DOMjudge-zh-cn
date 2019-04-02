@@ -12,28 +12,23 @@ $started = checkrole('jury') || $fdata['started'];
       <div class="collapse navbar-collapse" id="menuDefault">
         <ul class="navbar-nav mr-auto">
       <li class="nav-item<?=($pagename === 'index.php'?' active':'')?>">
-            <a class="nav-link" href="./"><span class="octicon octicon-list-ordered"></span> 排行榜</a>
+            <a class="nav-link" href="./"><span class="fas fa-list-ol"></span> 排行榜</a>
           </li>
       <li class="nav-item<?=($pagename === 'problems.php'?' active':'')?>">
 <?php if ($started): ?>
-            <a class="nav-link" href="problems.php"><span class="octicon octicon-book"></span> 题目列表</a>
+            <a class="nav-link" href="problems.php"><span class="fas fa-book-open"></span> 题目列表</a>
 <?php else: ?>
-            <a class="nav-link disabled"><span class="octicon octicon-book"></span> 题目列表</a>
+            <a class="nav-link disabled"><span class="fas fa-book-open"></span> 题目列表</a>
 <?php endif; ?>
           </li>
-<?php if (!logged_in()): ?>
-		<li class="nav-item">
-			<a class="nav-link" href="register.php"><span class="octicon octicon-organization"></span> 报名参赛</a>
-        </li>
-<?php endif; ?>
 <?php if (checkrole('team')): ?>
           <li class="nav-item">
-            <a class="nav-link" href="../team/"><span class="octicon octicon-arrow-right"></span> 比赛中心</a>
+            <a class="nav-link" href="../team/"><span class="fas fa-arrow-right"></span> 比赛中心</a>
       </li>
 <?php endif; ?>
 <?php if (checkrole('jury') || checkrole('balloon')): ?>
           <li class="nav-item">
-            <a class="nav-link" href="../jury"><span class="octicon octicon-arrow-right"></span> Jury</a>
+            <a class="nav-link" href="../jury"><span class="fas fa-arrow-right"></span> Jury</a>
       </li>
 <?php endif; ?>
          </ul>
