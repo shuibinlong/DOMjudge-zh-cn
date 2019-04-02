@@ -44,15 +44,14 @@ foreach ($langdata as $langid => $langdata) {
     <form action="upload.php" method="post" enctype="multipart/form-data" onsubmit="return checkUploadForm();">
      <div class="modal-body"> 
         <div class="form-group">
-          <label for="maincode">代码源文件：</label>
-          <input type="file" class="form-control-file" name="code[]" id="maincode" required <?=($maxfiles > 1 ? 'multiple': '')?> />
-          <!-- <div class="custom-file">
+          <label for="maincode">源文件：</label>
+          <div class="custom-file">
             <input type="file" class="custom-file-input" name="code[]" id="maincode" required <?=($maxfiles > 1 ? 'multiple': '')?> />
-            <label for="maincode" class="custom-file-label">选择文件</label>
-          </div> -->
+            <label for="maincode" class="custom-file-label">未选择任何文件</label>
+          </div>
         </div>
         <div class="form-group">
-          <label for="probid">题目ID：</label>
+          <label for="probid">题号：</label>
           <select class="custom-select" name="probid" id="probid" required>
 <?php
     foreach ($probs as $probid => $probname) {
@@ -78,9 +77,9 @@ foreach ($langdata as $langid => $langdata) {
         </div>
         <script type="text/javascript">initFileUploads(<?=$maxfiles?>);</script>
      </div> 
-     <div class="modal-footer"> 
+     <div class="modal-footer">
+	  <button type="submit" name="submit" class="btn btn-primary"><span class="fas fa-cloud-upload-alt"></span> 提交</button> 
       <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-      <button type="submit" name="submit" class="btn btn-primary"><span class="octicon octicon-cloud-upload"></span> 提交代码</button> 
      </div>
      </form>
     </div>
@@ -88,6 +87,14 @@ foreach ($langdata as $langid => $langdata) {
   </div>
 
   <script>
+    $('#maincode').on('change', function() {
+      var filename = $(this).val();
+      if (filename !== '' && filename !== undefined) {
+        filename = filename.replace(/^.*[\\\/]/, '');
+        $(this).next('.custom-file-label').html(filename);
+      }
+    })
+  
     function ShowSubmitDialog() {
       $("#SubmitForm").modal("show");
     }
@@ -104,38 +111,38 @@ foreach ($langdata as $langid => $langdata) {
       <div class="collapse navbar-collapse" id="menuDefault">
         <ul class="navbar-nav mr-auto">
       <li class="nav-item<?=($pagename === 'index.php'?' active':'')?>">
-            <a class="nav-link" href="./"><span class="octicon octicon-home"></span> 首页</a>
+            <a class="nav-link" href="./"><span class="fas fa-home"></span> 首页</a>
           </li>
       <li class="nav-item<?=($pagename === 'problems.php'?' active':'')?>">
 <?php if ($started): ?>
-            <a class="nav-link" href="problems.php"><span class="octicon octicon-book"></span> 题目列表</a>
+            <a class="nav-link" href="problems.php"><span class="fas fa-book-open"></span> 题目列表</a>
 <?php else: ?>
-            <a class="nav-link disabled"><span class="octicon octicon-book"></span> 题目列表</a>
+            <a class="nav-link disabled"><span class="fas fa-book-open"></span> 题目列表</a>
 <?php endif; ?>
           </li>
 <?php if (have_printing()): ?>
       <li class="nav-item<?=($pagename === 'print.php'?' active':'')?>">
-            <a class="nav-link" href="print.php"><span class="octicon octicon-file-text"></span> 打印</a>
+            <a class="nav-link" href="print.php"><span class="fas fa-print"></span> 打印</a>
       </li>
 <?php endif; ?>
       <li class="nav-item<?=($pagename === 'scoreboard.php'?' active':'')?>">
-            <a class="nav-link" href="scoreboard.php"><span class="octicon octicon-list-ordered"></span> 排行榜</a>
+            <a class="nav-link" href="scoreboard.php"><span class="fas fa-list-ol"></span> 排行榜</a>
           </li>
 <?php if (checkrole('jury') || checkrole('balloon')): ?>
           <li class="nav-item">
-            <a class="nav-link" href="../jury"><span class="octicon octicon-arrow-right"></span> Jury</a>
+            <a class="nav-link" href="../jury"><span class="fas fa-arrow-right"></span> Jury</a>
       </li>
 <?php endif; ?>
          </ul>
       </div>
 
 <?php if ($started): ?>
-      <div id="submitbut"><a class="nav-link justify-content-center" onclick="ShowSubmitDialog()"><button type="button" class="btn btn-success btn-sm"><span class="octicon octicon-cloud-upload"></span> 提交代码</button></a></div>
+      <div id="submitbut"><a class="nav-link justify-content-center" onclick="ShowSubmitDialog()"><button type="button" class="btn btn-success btn-sm"><span class="fas fa-cloud-upload-alt"></span> 提交代码</button></a></div>
 <?php else: ?>
-      <div id="submitbut"><a class="nav-link justify-content-center"><button type="button" class="btn btn-success btn-sm disabled"><span class="octicon octicon-cloud-upload"></span> 提交代码</button></a></div>
+      <div id="submitbut"><a class="nav-link justify-content-center"><button type="button" class="btn btn-success btn-sm disabled"><span class="fas fa-cloud-upload-alt"></span> 提交代码</button></a></div>
 <?php endif; ?>
 
-<div id="logoutbut"><a class="nav-link justify-content-center" href="../logout"><button type="button" class="btn btn-outline-info btn-sm" onclick="return confirmLogout();"><span class="octicon octicon-sign-out"></span> 注销</button></a></div>
+<div id="logoutbut"><a class="nav-link justify-content-center" href="../logout"><button type="button" class="btn btn-outline-info btn-sm" onclick="return confirmLogout();"><span class="fas fa-sign-out-alt"></span> 注销</button></a></div>
 
 <?php putClock(); ?>
     </nav>
