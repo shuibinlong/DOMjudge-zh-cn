@@ -304,8 +304,11 @@ function putClarificationList($clars, $team = null)
         }
 
         $clar['clarid'] = (int)$clar['clarid'];
-        $link = '<a href="clarification.php?id=' . urlencode($clar['clarid'])  . '">';
-
+        if (IS_JURY) {
+            $link = '<a href="clarification.php?id=' . urlencode($clar['clarid'])  . '">';
+        } else {
+            $link = '<a data-ajax-modal data-ajax-modal-after="markRead" href="clarification_modal.php?id=' . urlencode($clar['clarid'])  . '">';
+        }
         if (isset($clar['unread'])) {
             echo '<tr class="unread">';
         } else {
@@ -534,7 +537,7 @@ function confirmClar() {
 <?php endif; ?>
 
 <div class="form-group">
-<label for="sendto">裁判员:</label>
+<label for="sendto">收件方:</label>
 <?php if (IS_JURY) {
         echo "<select name=\"sendto\" class=\"custom-select\" id=\"sendto\">\n";
         foreach ($sendto_options as $value => $desc) {
@@ -583,12 +586,10 @@ if (IS_JURY && $respid!==null) {
         }
     } ?>
 
-<?php if (IS_JURY): ?>
 <div class="form-group">
-<button type="submit" value="Send" name="submit" class="btn btn-primary"><span class="octicon octicon-cloud-upload"></span> 提交</button>
+<button type="submit" value="Send" name="submit" class="btn btn-primary"><span class="fas fa-envelope"></span> 提交</button>
 </div>
 </form>
-<?php endif; ?>
 </div>
 <?php
 }
