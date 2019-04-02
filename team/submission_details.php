@@ -7,8 +7,8 @@
  */
 
 require('init.php');
-$title = '提交详情页面';
-require(LIBWWWDIR . '/header.php');
+
+
 
 $id = getRequestID();
 
@@ -34,7 +34,14 @@ if (!$row || $row['submittime'] >= $cdata['endtime'] ||
 $DB->q("UPDATE judging j SET j.seen = 1 WHERE j.submitid = %i", $id);
 ?>
 
-<h1>提交详情信息</h1>
+<div class="modal fade" tabindex="-1" role="dialog" style="padding-right: 15px; display: block;" aria-modal="true"> 
+<div class="modal-dialog modal-lg" role="document"> 
+<div class="modal-content"> 
+<div class="modal-header">
+    <h2 class="modal-title">提交详情</h2>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+</div>
+<div class="modal-body">
 
 <div class="container">
 <?php if (! $row['valid']): ?>
@@ -130,7 +137,10 @@ if ($show_sample && @$row['result']!='compiler-error') {
         }
     }
 }
-
-echo "</div>\n\n";
-
-require(LIBWWWDIR . '/footer.php');
+?>
+</div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+</div>
+</div>
