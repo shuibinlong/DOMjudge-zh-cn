@@ -178,7 +178,7 @@ function putSubmissions($cdatas, $restrictions, $limit = 0, $highlight = null, $
         (IS_JURY && count($cids) > 1 ? "<th scope=\"col\" class=\"sorttable_numeric\">contest</th>" : '') .
         "<th scope=\"col\">提交时间</th>" .
         (IS_JURY ? "<th scope=\"col\">team</th>" : '') .
-        "<th scope=\"col\">题目ID</th>" .
+        "<th scope=\"col\">题号</th>" .
         "<th scope=\"col\">语言</th>" .
         "<th scope=\"col\">评测结果</th>" .
         (IS_JURY ? "<th scope=\"col\">verified</th><th scope=\"col\">by</th>" : '') .
@@ -204,7 +204,7 @@ function putSubmissions($cdatas, $restrictions, $limit = 0, $highlight = null, $
         } elseif ($row['submittime'] < $cdatas[$row['cid']]['endtime'] &&
                    $row['result'] && $row['valid'] &&
                    (!dbconfig_get('verification_required', 0) || $row['verified'])) {
-            $link = ' href="submission_details.php?id=' . $sid . '"';
+            $link = ' data-ajax-modal data-ajax-modal-after="markSeen" href="submission_details.php?id=' . $sid . '"';
         } else {
             $link = '';
         }
@@ -553,7 +553,7 @@ function putClock()
         }
     }
 
-    echo "<span style=\"padding-left: 10px;\" class=\"octicon octicon-clock\"></span> <span id=\"timeleft\">$left</span></div>\n";
+    echo "<span style=\"padding-left: 10px;\" class=\"fas fa-clock\"></span> <span id=\"timeleft\">$left</span></div>\n";
 
     echo "<script type=\"text/javascript\">
     var initial = " . time() . ";
