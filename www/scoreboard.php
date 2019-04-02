@@ -335,7 +335,7 @@ function renderScoreBoardTable(
         '<div class="modal-dialog">' . 
         '<div class="modal-content">' . 
         '<div class="modal-header">' . 
-        '<h4 class="modal-title">队伍信息</h4>' . 
+        '<h2 class="modal-title">队伍详细信息</h2>' . 
         '<button type="button" class="close" data-dismiss="modal">&times;</button>' . 
         '</div>' . 
         '<div class="modal-body">' . 
@@ -343,8 +343,8 @@ function renderScoreBoardTable(
         '<tr><th style="width:35%; text-align:center;"><strong>队伍名称</strong></th><td style="text-align:center;" id="TeamName">*唐回峰</td></tr>' . 
         '<tr><th style="width:35%; text-align:center;"><strong>队伍属性</strong></th><td style="text-align:center;" id="TeamCategory">2015级</td></tr>' . 
         '<tr><th style="width:35%; text-align:center;"><strong>学院/书院</strong></th><td style="text-align:center;" id="TeamAffiliation">计算机学院</td></tr>' . 
-        '<tr><th style="width:35%; text-align:center;"><strong>队伍成员</strong></th><td style="text-align:center;" id="TeamMembers">2015级</td></tr>' . 
-        '<tr><th style="width:35%; text-align:center;"><strong>队伍位置</strong></th><td style="text-align:center;" id="TeamLocation">计算机学院</td></tr>' . 
+        '<tr><th style="width:35%; text-align:center;"><strong>队内成员</strong></th><td style="text-align:center;" id="TeamMembers">2015级</td></tr>' . 
+        '<tr><th style="width:35%; text-align:center;"><strong>位置坐标</strong></th><td style="text-align:center;" id="TeamLocation">计算机学院</td></tr>' . 
         '</tbody></table></div></div></div>' . 
         '<div class="modal-footer">' . 
         '<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>' . 
@@ -429,9 +429,8 @@ function renderScoreBoardTable(
             $usedCategories[$categoryId] = true;
         }
     }
-    $gold = 6;
-    $silver = 15;
-    $bronze = 25;
+    $gold = 6; $silver = 15; $bronze = 25;
+    $gold_2018 = 1; $silver_2018 = 3; $bronze_2018 = 6;
     foreach ($scores as $team => $totals) {
         // skip if we have limitteams and the team is not listed
         if (!empty($limitteams) && !in_array($team, $limitteams)) {
@@ -459,6 +458,7 @@ function renderScoreBoardTable(
         }
         // GetPrize
         $team_name = specialchars($teams[$team]['name']);
+        $team_category = specialchars($categs[$categoryId]['name']);
         $prize = false;
         if ($gold > 0 || $silver > 0 || $bronze > 0) {
             $prize = true;
@@ -481,15 +481,24 @@ function renderScoreBoardTable(
         echo '<td class="scorepl"';
         if ($prize == true) {
             echo ' style="background: ';
-            if ($gold > 0) {
+            if ($gold > 0 && ($gold > $gold_2018 || ($gold == $gold_2018 && $team_category == "2018级"))) {
                 echo '#ffd700';
                 $gold--;
-            } else if ($silver > 0) {
+                if ($team_category == "2018级") {
+                    $gold_2018--;
+                }
+            } else if ($silver > 0 && ($silver > $silver_2018 || ($silver == $silver_2018 && $team_category == "2018级"))) {
                 echo '#c0c0c0';
                 $silver--;
-            } else if ($bronze > 0) {
+                if ($team_category == "2018级") {
+                    $silver_2018--;
+                }
+            } else if ($bronze > 0 && ($bronze > $bronze_2018 || ($bronze == $bronze_2018 && $team_category == "2018级"))) {
                 echo '#cd853f';
                 $bronze--;
+                if ($team_category == "2018级") {
+                    $bronze_2018--;
+                }
             }
             echo ';"';
         }
@@ -806,6 +815,9 @@ function putScoreBoard($cdata, $myteamid = null, $static = false, $filter = fals
     if (IS_JURY) {
         echo '<div style="margin-top: 4em;"></div>';
     }
+
+    echo '<img class="banner" src="../images/banner.png">';
+
     echo '<div class="card">';
     // page heading with contestname and start/endtimes
     echo '<div class="card-header" style="display: flex;">';
