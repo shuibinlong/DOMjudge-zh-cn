@@ -26,7 +26,7 @@ if (!checkrole('jury') && !$fdata['started']) {
     exit;
 }
 
-if (isset($_POST['langid'])) {
+if (isset($_POST['printlangid'])) {
     handle_print_upload();
 } else {
     put_print_form();
