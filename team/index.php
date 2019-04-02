@@ -9,7 +9,7 @@ $title = specialchars($teamdata['name']);
 require(LIBWWWDIR . '/header.php');
 
 // Don't use HTTP meta refresh, but javascript: otherwise we cannot FIXME still relevant?
-$refreshtime = 30;
+$refreshtime = 60;
 
 $submitted = @$_GET['submitted'];
 
@@ -109,6 +109,19 @@ HTML;
 */
 
 ?>
+<script>
+function markSeen($elem) {
+    $elem.closest('tr').removeClass('unseen');
+}
+
+function markRead($elem) {
+    $elem.closest('tr').removeClass('unread');
+}
+
+$(function () {
+    initializeAjaxModals();
+});
+</script>
 
 <div class="modal fade" id="ClarificationForm"> 
    <div class="modal-dialog"> 
@@ -117,14 +130,9 @@ HTML;
       <h2 class="modal-title">请完善您的提问内容</h2> 
       <button type="button" class="close" data-dismiss="modal">&times;</button> 
      </div>
-     <div class="modal-body"> 
-        <?php putClarificationForm("clarification.php"); ?>
-     </div> 
-     <div class="modal-footer"> 
-      <button type="submit" value="Send" name="submit" class="btn btn-primary" id="SendButton"><span class="octicon octicon-cloud-upload"></span> 提交</button>
-      <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+     <div class="modal-body" id="clar"> 
+        <?php putClarificationForm("clarification.php", null, $cid); ?>
      </div>
-     </form>
     </div>
    </div>
 </div>
@@ -189,10 +197,12 @@ if ($requests->count() == 0) {
 }
 
 ?>
+
 <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ClarificationForm">我要提问</button>
 
 </div>
 
 </div>
 <?php
+
 require(LIBWWWDIR . '/footer.php');
