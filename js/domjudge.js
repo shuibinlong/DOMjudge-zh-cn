@@ -398,7 +398,7 @@ function maybeShowEntryPoint(langid, filename = null)
 	var display = entry_point_desc ? 'inline' : 'none';
 	entry_point.style.display = entry_point_text.style.display = entry_point_help.style.display = display;
 	if ( entry_point_desc ) {
-		entry_point_text.innerHTML = entry_point_desc + ':';
+		// entry_point_text.innerHTML = entry_point_desc + ':';
 		entry_point.required = true;
 	} else {
 		entry_point.required = false;
@@ -787,4 +787,41 @@ function clarificationAppendAnswer(replace = false) {
 
 function confirmLogout() {
 	return confirm("确定要退出账号吗？");
+}
+
+
+function initializeAjaxModals() {
+	var $body = $('body');
+	$body.on('click', '[data-ajax-modal]', function() {
+		var $elem = $(this);
+		var url = $elem.attr('href');
+		if (!url) {
+			return;
+		}
+		$.ajax({
+			url: url
+		}).done(function(data) {
+			var $data = $(data);
+			$('body').append($data);
+			$data.modal('show');
+			if ($elem.data('ajax-modal-after')) {
+				window[$elem.data('ajax-modal-after')]($elem);
+			}
+
+			$data.on('hidden.bs.modal', function() {
+				$data.remove();
+			});
+		});
+		return false;
+	});
+
+	$body.on('click', '.modal-dialog button[data-url]', function() {
+		var url = $(this).data('url');
+		$.ajax({
+			url: url,
+			method: 'POST'
+		}).done(function(data) {
+			window.location = data.url;
+		});
+	});
 }
