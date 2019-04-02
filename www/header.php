@@ -66,6 +66,9 @@ h6 { font-size: .75em; }
 .clarificationform {
   max-width: 800px;
 }
+.custom-file-label::after {
+    content: "选择文件" !important;;
+}
 /* #submitbut {
   margin-right: 2rem;
 } */
