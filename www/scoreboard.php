@@ -340,26 +340,37 @@ function renderScoreBoardTable(
         '</div>' . 
         '<div class="modal-body">' . 
         '<div class="row"><div class="col-sm-8"><table class="table table-sm table-striped"><tbody>' . 
-        '<tr><th style="width:35%; text-align:center;"><strong>队伍名称</strong></th><td style="text-align:center;" id="TeamName">*唐回峰</td></tr>' . 
-        '<tr><th style="width:35%; text-align:center;"><strong>队伍属性</strong></th><td style="text-align:center;" id="TeamCategory">2015级</td></tr>' . 
-        '<tr><th style="width:35%; text-align:center;"><strong>学院/书院</strong></th><td style="text-align:center;" id="TeamAffiliation">计算机学院</td></tr>' . 
-        '<tr><th style="width:35%; text-align:center;"><strong>队内成员</strong></th><td style="text-align:center;" id="TeamMembers">2015级</td></tr>' . 
-        '<tr><th style="width:35%; text-align:center;"><strong>位置坐标</strong></th><td style="text-align:center;" id="TeamLocation">计算机学院</td></tr>' . 
+        '<tr><th style="width:35%; text-align:center;"><strong>Name</strong></th><td style="text-align:center;" id="TeamName">*唐回峰</td></tr>' . 
+        '<tr><th style="width:35%; text-align:center;"><strong>Category</strong></th><td style="text-align:center;" id="TeamCategory">2015级</td></tr>' . 
+        '<tr><th style="width:35%; text-align:center;"><strong>Affiliation</strong></th><td style="text-align:center;" id="TeamAffiliation">计算机学院</td></tr>' . 
+        '<tr><th style="width:35%; text-align:center;"><strong>Members</strong></th><td style="text-align:center;" id="TeamMembers">龙水彬、周赫斌、易翔宇</td></tr>' . 
+        '<tr><th style="width:35%; text-align:center;"><strong>Location</strong></th><td style="text-align:center;" id="TeamLocation">计算机学院</td></tr>' . 
         '</tbody></table></div></div></div>' . 
         '<div class="modal-footer">' . 
         '<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>' . 
         '</div></div></div></div>';
-
-    echo "<script language=javascript>" . 
-        "function ShowDialog(name, Category, Affiliation, Members, Location){" . 
-            '$("#TeamName").html(name);' . 
-            '$("#TeamCategory").html(Category);' . 
-            '$("#TeamAffiliation").html(Affiliation);' . 
-            '$("#TeamMembers").html(Members);' . 
-            '$("#TeamLocation").html(Location);' . 
-            '$("#TeamFace").modal("show");' . 
-        "}</script>";
-
+?>
+<script type="text/javascript">
+    function ShowDialog(name, Category, Affiliation, Members, Location) {
+        $("#TeamName").html(name);
+        if (Category == "girl") {
+            $("#TeamCategory").html("女生队伍");
+        } else if (Category == "junior") {
+            $("#TeamCategory").html("新生队伍");
+        } else if (Category == "star") {
+            $("#TeamCategory").html("外校队伍");
+        } else if (Category == "regular") {
+            $("#TeamCategory").html("普通队伍");
+        } else {
+            $("#TeamCategory").html(Category);
+        }
+        $("#TeamAffiliation").html(Affiliation);
+        $("#TeamMembers").html(Members);
+        $("#TeamLocation").html(Location);
+        $("#TeamFace").modal("show");
+    }
+</script>
+<?php
     echo '<table class="scoreboard' . (IS_JURY ? ' scoreboard_jury' : '') . ($center ? ' center' : '') . "\">\n";
 
     // output table column groups (for the styles)
@@ -463,7 +474,7 @@ function renderScoreBoardTable(
         if ($gold > 0 || $silver > 0 || $bronze > 0) {
             $prize = true;
         }
-        if (substr($team_name, 0, 1) == '*' || $personal == true) {
+        if ($team_category == "star" || $personal == true) {
             $prize = false;
         } 
         // check whether this is us, otherwise use category colour
@@ -481,22 +492,22 @@ function renderScoreBoardTable(
         echo '<td class="scorepl"';
         if ($prize == true) {
             echo ' style="background: ';
-            if ($gold > 0 && ($gold > $gold_2018 || ($gold == $gold_2018 && $team_category == "2018级"))) {
+            if ($gold > 0 && ($gold > $gold_2018 || ($gold == $gold_2018 && $team_category == "junior"))) {
                 echo '#ffd700';
                 $gold--;
-                if ($team_category == "2018级") {
+                if ($team_category == "junior") {
                     $gold_2018--;
                 }
-            } else if ($silver > 0 && ($silver > $silver_2018 || ($silver == $silver_2018 && $team_category == "2018级"))) {
+            } else if ($silver > 0 && ($silver > $silver_2018 || ($silver == $silver_2018 && $team_category == "junior"))) {
                 echo '#c0c0c0';
                 $silver--;
-                if ($team_category == "2018级") {
+                if ($team_category == "junior") {
                     $silver_2018--;
                 }
-            } else if ($bronze > 0 && ($bronze > $bronze_2018 || ($bronze == $bronze_2018 && $team_category == "2018级"))) {
+            } else if ($bronze > 0 && ($bronze > $bronze_2018 || ($bronze == $bronze_2018 && $team_category == "junior"))) {
                 echo '#cd853f';
                 $bronze--;
-                if ($team_category == "2018级") {
+                if ($team_category == "junior") {
                     $bronze_2018--;
                 }
             }
@@ -575,8 +586,11 @@ function renderScoreBoardTable(
             (IS_JURY ? ' title="' . specialchars($team) . '"' : '') . '>' .
             ($static ? '' : '<a onclick="ShowDialog(' . "'" . specialchars($teams[$team]['name']) . "','" . specialchars($categs[$categoryId]['name']) . "','" . $affilname . "','" . specialchars($teams[$team]['members']) . "','" . specialchars($teams[$team]['room']) . "'" . ')">') .
             $region_leader .
+            ($team_category == "star" ? '<i class="fas fa-star" style="color: #FFD700;"></i> ' : '') . 
+            ($team_category == "girl" ? '<i class="fas fa-venus" style="color: #F06595;"></i> ' : '') . 
             specialchars($teams[$team]['name']) .
-            ($SHOW_AFFILIATIONS ? '<br /><span class="univ">' . $affilname .
+            ($SHOW_AFFILIATIONS ? '<br />' . 
+            '<span class="univ">' . $affilname .
              '</span>' : '') .
             ($static ? '' : '</a>') .
             '</td>';
@@ -640,7 +654,7 @@ function renderScoreBoardTable(
                     $div = '<div class="' . $score_css_class . '">' . $time
                         . '<span>' . $tries . '</span>' . '</div>';
                     $url = 'team.php?id=' . urlencode($team) . '&amp;restrict=probid:' . urlencode($prob);
-                    echo jurylink($url, $div);
+                    echo jurylink($url, $div, true);
                 }
                 echo '</td>';
             }
@@ -1242,14 +1256,18 @@ function calcTeamRank($cdata, $teamid, $teamtotals, $jury = false)
 /**
  * Generate scoreboard links for jury only.
  */
-function jurylink($target, $content)
+function jurylink($target, $content, $scoreboard=false)
 {
     $res = "";
-    if (IS_JURY) {
-        $res .= '<a' . (isset($target) ? ' href="' . $target . '"' : '') . '>';
+    if (IS_JURY || $scoreboard) {
+        if (IS_JURY) {
+            $res .= '<a' . (isset($target) ? ' href="' . $target . '"' : '') . '>';
+        } else {
+            $res .= '<a>';
+        }
     }
     $res .= $content;
-    if (IS_JURY) {
+    if (IS_JURY || $scoreboard) {
         $res .= '</a>';
     }
 
