@@ -37,9 +37,9 @@ $started = checkrole('jury') || $fdata['started'];
 logged_in(); // fill userdata
 
 if (!logged_in()) {
-    echo '<div id="loginbut"><a class="nav-link justify-content-center" href="login.php"><button type="button" class="btn btn-info btn-sm"><span class="octicon octicon-sign-in"></span> 登录</button></a></div>';
+    echo '<div id="loginbut"><a class="nav-link justify-content-center" href="login.php"><button type="button" class="btn btn-info btn-sm"><span class="fas fa-sign-in-alt"></span> 登录</button></a></div>';
 } else {
-    echo '<div id="logoutbut"><a class="nav-link justify-content-center" href="../logout"><button type="button" class="btn btn-outline-info btn-sm"><span class="octicon octicon-sign-out"></span> 注销</button></a></div>';
+    echo '<div id="logoutbut"><a class="nav-link justify-content-center" href="../logout"><button type="button" class="btn btn-outline-info btn-sm"><span class="fas fa-sign-out-alt"></span> 注销</button></a></div>';
 }
 
 if (! $isstatic) {
