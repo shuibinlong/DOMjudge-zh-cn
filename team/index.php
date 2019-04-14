@@ -6,7 +6,14 @@
 
 require('init.php');
 $title = specialchars($teamdata['name']);
+
+
 require(LIBWWWDIR . '/header.php');
+?>
+<div data-ajax-refresh-target="" data-ajax-refresh-after="setFlashAndProgress" data-ajax-refresh-before="saveFlash"><div id="teamscoresummary">
+
+<?php 
+
 
 // Don't use HTTP meta refresh, but javascript: otherwise we cannot FIXME still relevant?
 $refreshtime = 60;
@@ -35,7 +42,7 @@ if ($fdata['started'] || checkrole('jury')) {
     }
     echo "\t\tdefault: return '';\n\t}\n}\n\n";
 }
-echo "initReload(" . $refreshtime . ");\n";
+// echo "initReload(" . $refreshtime . ");\n";
 echo "// -->\n</script>\n";
 
 // Put overview of team submissions (like scoreboard)
@@ -110,6 +117,23 @@ HTML;
 
 ?>
 <script>
+var $flash = null;
+
+function saveFlash() {
+    $flash = $('[data-flash-messages]').children();
+}
+
+function setFlashAndProgress() {
+    var $newProgress = $('[data-ajax-refresh-target] > [data-progress-bar]');
+    if ($newProgress.length) {
+        var $oldProgress = $('body > [data-progress-bar]');
+        $oldProgress.html($newProgress.children());
+        $newProgress.remove();
+    }
+
+    $('[data-flash-messages]').html($flash);
+}
+
 function markSeen($elem) {
     $elem.closest('tr').removeClass('unseen');
 }
@@ -118,7 +142,51 @@ function markRead($elem) {
     $elem.closest('tr').removeClass('unread');
 }
 
+var refreshHandler = null;
+var refreshEnabled = false;
+function enableTeamRefresh($url, $after, usingAjax) {
+    if (refreshEnabled) {
+        return;
+    }
+    var refresh = function () {
+        if (usingAjax) {
+            $('.ajax-loader').show('fast');
+            $.ajax({
+                url: $url
+            }).done(function(data, status, jqXHR) {
+                processAjaxResponse(jqXHR, data);
+                $('.ajax-loader').hide('fast');
+            });
+        } else {
+            window.location = $url;
+        }
+    };
+    if (usingAjax) {
+        refreshHandler = setInterval(refresh, $after * 1000);
+    } else {
+        refreshHandler = setTimeout(refresh, $after * 1000);
+    }
+    refreshEnabled = true;
+    window.Cookies && Cookies.set('domjudge_refresh', 1);
+
+    if(window.location.href == localStorage.getItem('lastUrl')) {
+    	window.scrollTo(0, localStorage.getItem('scrollTop'));
+    } else {
+    	localStorage.setItem('lastUrl', window.location.href);
+    	localStorage.setItem('scrollTop', 42);
+    }
+    var scrollTimeout;
+    document.addEventListener('scroll', function() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(function() {
+        localStorage.setItem('scrollTop', $(window).scrollTop());
+      }, 100)
+    });
+}
+
+
 $(function () {
+    enableTeamRefresh('/team', 30, 1);
     initializeAjaxModals();
 });
 </script>
@@ -201,7 +269,7 @@ if ($requests->count() == 0) {
 <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ClarificationForm">我要提问</button>
 
 </div>
-
+</div>
 </div>
 <?php
 
